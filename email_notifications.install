@@ -1,0 +1,81 @@
+<?php
+/**
+ * Install the Email Notification module.
+ */
+
+/**
+ * Implementation of hook_schema().
+ */
+function email_notifications_schema() {
+  // Create database table to record information for the email notifications.
+  $schema['email_notification_data'] = array(
+    'description' => t('Stores settings for email notifications'),
+    'fields' => array(
+      'enid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ),
+      'email_address' => array(
+       'description' => t('The email address that the notification should be sent to.'),
+       'type' => 'varchar',
+       'length' => 255,
+       'not null' => TRUE,
+      ),
+      'email_subject' => array(
+       'description' => t('The subject for the email that will be sent.'),
+       'type' => 'varchar',
+       'length' => 255,
+      ),
+      'og_nid' => array(
+       'description' => t('A list of NID for the groups which will be sent the notifications.'),
+       'type' => 'blob',
+       'not null' => TRUE,
+       'size' => 'big',
+       'translatable' => TRUE,
+      ),
+      'content_types' => array(
+       'description' => t('A list of content types for which the notification will be triggered.'),
+       'type' => 'blob',
+       'not null' => TRUE,
+       'size' => 'big',
+       'translatable' => TRUE,
+      ),
+      'actions' => array(
+       'description' => t('Which actions will trigger this email being sent out.'),
+       'type' => 'blob',
+       'not null' => TRUE,
+       'size' => 'big',
+       'translatable' => TRUE,
+      ),
+      'active' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+    ),
+    'primary key' => array('enid'),
+  );
+
+  return $schema;
+
+}
+
+/**
+ * Implementation of hook_install().
+ */
+function email_notifications_install() {
+  variable_set('email_notifications_active', FALSE);
+}
+
+
+/**
+ * Implementation of hook_uninstall().
+ */
+
+function email_notifications_uninstall() {
+  db_delete('variable')
+  ->condition('name', 'email_notifications_%', 'LIKE')
+  ->execute();
+}

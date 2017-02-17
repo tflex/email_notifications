@@ -1,0 +1,5 @@
+name = "Email Notifications"
+description = "Send an email notification based on an admin-defined action"
+core = 7.x
+package = "uleth custom"
+dependencies[] = "og"
